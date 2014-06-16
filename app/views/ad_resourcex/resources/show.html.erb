@@ -1,0 +1,65 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+<div id="main_body">
+<h4><%= @title %></h4>
+
+<p>
+  <b><%= t('Name') %></b>
+  <%= @resource.name %>
+</p>
+<p>
+  <b><%= t('Resource Desp') %></b>
+  <%= @resource.resource_desp %>
+</p>
+<p>
+  <b><%= t('Resource Location') %></b>
+  <%= @resource.location %>
+</p>
+<p>
+  <b><%= t('Standard Price($)') %></b>
+  <%= @resource.standard_price %>
+</p>
+<p>
+  <b><%= t('About Price') %></b>
+  <%= @resource.about_price %>
+</p>
+<p>
+    <b><%= t('Service Start Date') %></b>
+    <%= @resource.service_start_date.strftime('%Y/%m/%/d') if @resource.service_start_date.present? %>
+</p>
+<p>
+    <b><%= t('Service End Date') %></b>
+    <%= @resource.service_end_date.strftime('%Y/%m/%/d') if @resource.service_end_date.present? %>
+</p>
+<p>
+    <b><%= t('In Service') %></b>
+    <%= @resource.in_service ? t('Yes') : t('No') %>
+</p>
+<p>
+  <b><%= t('Last Updated By') %></b>
+  <%= @resource.last_updated_by.name if @resource.last_updated_by_id.present? %>
+</p>
+<p>
+  <b><%= t('LOG：') %></b>
+  <% Commonx::Log.where('resource_id = ? AND resource_name = ?', @resource.id, params[:controller].sub('/', '_')).order("created_at DESC").each do |t| %>
+    <li><%= t.created_at.strftime("%Y/%m/%d") %>,&nbsp; <%= t.last_updated_by.name %>,&nbsp; <%= t.log %></li>
+  <% end %>
+</p>
+
+<table class="table table-striped">
+  <tr>
+    <th>
+    	<%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :id => 'close', :class => BUTTONS_CLS['action'] %>
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	<%= link_to t('New Log'), SUBURI + commonx.new_log_path(:resource_id => @resource.id, :resource_name => params[:controller], :subaction => 'ad_resource',
+    	     :format => :js), :remote => true, :id => 'new_log_link' , :class => BUTTONS_CLS['action'] if has_action_right?('create_ad_resource', 'commonx/logs') %>
+    </th>
+  </tr>
+</table>
+
+
+</div>
+
+<% end %>

@@ -1,0 +1,24 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: @erb_code %>
+  
+<% else %>
+<%= simple_form_for @resource do |f| %> 
+  <%= f.input :name, :label => t('Name') %> 
+  <%= f.input :resource_desp, :label => t('Resource Description'), :input_html => { :rows => 3} %> 
+  <%= f.input :location, :label => t('Resource Location'), :input_html => { :rows => 3} %>
+  <%= f.input :standard_price, :label => t('Standard Price($)') %>
+  <%= f.input :about_price, :label => t('About Price') %>
+  <%= f.input :service_start_date, :label => t('Service Start Date'), :as => :string %>
+  <%= f.input :service_end_date, :label => t('Service End Date'), :as => :string %>  
+  <%= f.input :in_service, :label => t('Awarded'), :as => :boolean unless readonly?(@resource, 'in_service') %>
+  <%= f.input :in_service_noupdate, :label => t('Awarded'), :input_html => {:value => (@resource.awarded ? t('Yes') : t('No'))} if readonly?(@resource, 'in_service') %>
+  <%= f.input :last_updated_by_name, :label => t('Last Updated By'), :input_html => {:value => @resource.last_updated_by.name}, :readonly => true %>
+     
+  <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action'] %>
+  <%= f.button :submit, t('Save'), :class => BUTTONS_CLS['action'] %>
+    
+<% end %>
+
+<% end %>
+
+

@@ -1,0 +1,55 @@
+<% if @view_in_config && @erb_code %>
+  <%= render inline: ERB.new(@erb_code).result(binding) %>
+  
+<% else %>
+<div class="pagination"><%= will_paginate models %></div>
+
+<table class="table table-striped">
+  <tr>
+    <th>#</th>
+    <th><%= t('Name') %></th>
+    <th><%= t('Resource Desp') %></th>
+    <th><%= t('Location Address') %></th>
+    <th><%= t('Standard Price($)') %></th>
+    <th><%= t('About Price') %></th>
+    <th><%= t('In Service') %></th>
+    <th><%= t('Last Updated By') %></th>
+    <th></th>
+  </tr>
+
+<% models.each do |r| %>
+  <tr>
+    <% if has_action_right?('show', params[:controller], r) %>
+        <td><%= link_to r.id, SUBURI + "/authentify/view_handler?index=1&url=#{resource_path(r)}"  %></td>
+    <% else %>
+        <td><%= r.id %></td>
+    <% end %>
+  	<td><%= prt(r, :name) %></td> 
+    <td><%= prt(r, :resource_desp) %></td> 
+    <td><%= prt(r, :location) %></td>
+    <td><%= prt(r, 'standard_price') %></td>
+    <td><%= prt(r, 'about_price') %></td>
+    <td><%= r.in_service ? t('Yes') : t('No') %></td>
+    <td><%= prt(r, 'last_updated_by.name') if r.last_updated_by_id.present? %></td>
+    <td><%= link_to t('Edit'), SUBURI + "/authentify/view_handler?index=1&url=#{edit_resource_path(r)}" , :class => BUTTONS_CLS['action'] if has_action_right?('update', params[:controller], r )  %></td>
+    
+  </tr>
+<% end %>
+</table>
+
+<table class="table table-striped">
+  <tr>
+    <th>
+    	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <%= link_to t('Back'), SUBURI + "/authentify/view_handler?index=0", :class => BUTTONS_CLS['action']  %>
+       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    	<%= link_to t('New Resource'), SUBURI + "/authentify/view_handler?index=1&url=#{new_resource_path}", :class => BUTTONS_CLS['action'] if has_action_right?('create', params[:controller]) %>
+ 
+    </th>
+  </tr>
+</table>
+
+<% end %>
+
+
+
