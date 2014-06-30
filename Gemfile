@@ -6,7 +6,6 @@ source "https://rubygems.org"
 gemspec
 
 # jquery-rails is used by the dummy application
-# jquery-rails is used by the dummy application
 gem "jquery-rails", "~> 2.3.0"
 gem "will_paginate"
 
