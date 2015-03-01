@@ -1,6 +1,6 @@
-require 'spec_helper'
+require 'rails_helper'
 
-describe "LinkTests" do
+RSpec.describe "LinkTests", type: :request do
   describe "GET /ad_resourcex_link_tests" do
     mini_btn = 'btn btn-mini '
     ActionView::CompiledTemplates::BUTTONS_CLS =
@@ -54,45 +54,45 @@ describe "LinkTests" do
     it "should work" do
       qs = FactoryGirl.create(:ad_resourcex_resource, :in_service => true, :last_updated_by_id => @u.id)
       
-      visit resources_path
+      visit ad_resourcex.resources_path
       click_link qs.id.to_s
-      page.should have_content('Resource Info')
+      expect(page).to have_content('Resource Info')
       click_link 'New Log'
-      page.should have_content('Log')
+      expect(page).to have_content('Log')
       #save_and_open_page
-      visit resources_path() 
+      visit ad_resourcex.resources_path() 
       save_and_open_page
       click_link 'Edit'
       #save_and_open_page
-      page.should have_content('Edit Resource')
+      expect(page).to have_content('Edit Resource')
       fill_in 'resource_name', :with => 'new name'
       click_button 'Save'
       save_and_open_page
       #wrong data
-      visit resources_path() 
+      visit ad_resourcex.resources_path() 
       click_link 'Edit'
-      page.should have_content('Edit Resource')
+      expect(page).to have_content('Edit Resource')
       fill_in 'resource_location', :with => ''
       click_button 'Save'
       save_and_open_page
       
-      visit resources_path
+      visit ad_resourcex.resources_path
       save_and_open_page
-      page.should have_content('Resources')
+      expect(page).to have_content('Resources')
       click_link 'New Resource'
       save_and_open_page
-      page.should have_content('New Resource')
+      expect(page).to have_content('New Resource')
       fill_in 'resource_name', :with => 'new Resource'
       fill_in 'resource_location', :with => 'this is the address for the Resource'
       click_button 'Save'
       save_and_open_page
       #wrong data
-      visit resources_path
+      visit ad_resourcex.resources_path
       save_and_open_page
-      page.should have_content('Resources')
+      expect(page).to have_content('Resources')
       click_link 'New Resource'
       save_and_open_page
-      page.should have_content('New Resource')
+      expect(page).to have_content('New Resource')
       fill_in 'resource_name', :with => 'this is the address for the Resource'
       fill_in 'resource_location', :with => ''
       click_button 'Save'

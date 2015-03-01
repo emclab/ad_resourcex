@@ -1,10 +1,11 @@
-require 'spec_helper'
+require 'rails_helper'
 
 module AdResourcex
-  describe ResourcesController do
+  RSpec.describe ResourcesController, type: :controller do
+    routes {AdResourcex::Engine.routes}
     before(:each) do
-      controller.should_receive(:require_signin)
-      controller.should_receive(:require_employee)
+      expect(controller).to receive(:require_signin)
+      expect(controller).to receive(:require_employee)
     end
     before(:each) do
       @pagination_config = FactoryGirl.create(:engine_config, :engine_name => nil, :engine_version => nil, :argument_name => 'pagination', :argument_value => 30)
@@ -28,8 +29,8 @@ module AdResourcex
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:ad_resourcex_resource, :in_service => true, :last_updated_by_id => @u.id)
         qs1 = FactoryGirl.create(:ad_resourcex_resource, :in_service => true, :last_updated_by_id => @u.id,  :name => 'newnew')
-        get 'index' , {:use_route => :ad_resourcex}
-        assigns(:resources).should =~ [qs, qs1]       
+        get 'index' 
+        expect(assigns(:resources)).to match_array([qs, qs1])       
       end
       
       it "should return in service project" do
@@ -39,8 +40,8 @@ module AdResourcex
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:ad_resourcex_resource, :in_service => true, :last_updated_by_id => @u.id)
         qs1 = FactoryGirl.create(:ad_resourcex_resource, :in_service => false, :last_updated_by_id => @u.id,  :name => 'newnew')
-        get 'index' , {:use_route => :ad_resourcex}
-        assigns(:resources).should eq([qs])
+        get 'index' 
+        expect(assigns(:resources)).to match_array([qs])
       end
       
     end
@@ -52,8 +53,8 @@ module AdResourcex
         :sql_code => "")        
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
-        get 'new' , {:use_route => :ad_resourcex}
-        response.should be_success
+        get 'new' 
+        expect(response).to be_success
       end
            
     end
@@ -65,8 +66,8 @@ module AdResourcex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.attributes_for(:ad_resourcex_resource)
-        get 'create' , {:use_route => :ad_resourcex,  :resource => qs}
-        response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
+        get 'create' , { :resource => qs}
+        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
       end
       
       it "should render 'new' if data error" do
@@ -75,8 +76,8 @@ module AdResourcex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.attributes_for(:ad_resourcex_resource, :name => nil)
-        get 'create' , {:use_route => :ad_resourcex,  :resource => qs}
-        response.should render_template("new")
+        get 'create' , { :resource => qs}
+        expect(response).to render_template("new")
       end
     end
   
@@ -88,8 +89,8 @@ module AdResourcex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:ad_resourcex_resource, :last_updated_by_id => @u.id)
-        get 'edit' , {:use_route => :ad_resourcex,  :id => qs.id}
-        response.should be_success
+        get 'edit' , { :id => qs.id}
+        expect(response).to be_success
       end
       
     end
@@ -102,8 +103,8 @@ module AdResourcex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:ad_resourcex_resource, :last_updated_by_id => @u.id)
-        get 'update' , {:use_route => :ad_resourcex,  :id => qs.id, :resource => {:name => 'newnew'}}
-        response.should redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
+        get 'update' , { :id => qs.id, :resource => {:name => 'newnew'}}
+        expect(response).to redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
       end
       
       it "should render 'new' if data error" do
@@ -112,8 +113,8 @@ module AdResourcex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:ad_resourcex_resource, :last_updated_by_id => @u.id)
-        get 'update' , {:use_route => :ad_resourcex,  :id => qs.id, :resource => {:name => nil}}
-        response.should render_template("edit")
+        get 'update' , { :id => qs.id, :resource => {:name => nil}}
+        expect(response).to render_template("edit")
       end
     end
   
@@ -125,8 +126,8 @@ module AdResourcex
         session[:user_id] = @u.id
         session[:user_privilege] = Authentify::UserPrivilegeHelper::UserPrivilege.new(@u.id)
         qs = FactoryGirl.create(:ad_resourcex_resource)
-        get 'show' , {:use_route => :ad_resourcex,  :id => qs.id}
-        response.should be_success
+        get 'show' , { :id => qs.id}
+        expect(response).to be_success
       end
     end
   end

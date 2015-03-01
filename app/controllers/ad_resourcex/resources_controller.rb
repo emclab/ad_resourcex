@@ -2,7 +2,7 @@ require_dependency "ad_resourcex/application_controller"
 
 module AdResourcex
   class ResourcesController < ApplicationController
-    before_filter :require_employee
+    before_action :require_employee
     
     def index
       @title = t('Resources')
