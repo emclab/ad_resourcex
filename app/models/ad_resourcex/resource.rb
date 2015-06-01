@@ -1,6 +1,8 @@
 module AdResourcex
   class Resource < ActiveRecord::Base
     attr_accessor :last_updated_by_name, :category_name, :status_name, :in_service_noupdate
+    
+=begin
     attr_accessible :about_price, :category_id, :dimension, :location, :name, :resource_desp, :standard_price, :status_id, :in_service, :service_start_date,
                     :service_end_date, :wf_state,
                     :as => :role_new
@@ -8,7 +10,7 @@ module AdResourcex
                     :service_end_date, :wf_state,
                     :last_updated_by_name, :status_name, :category_name, :in_service_noupdate,
                     :as => :role_update
-    
+=end
     belongs_to :status, :class_name => 'Commonx::MiscDefinition'
     belongs_to :category, :class_name => 'Commonx::MiscDefinition'
     belongs_to :last_updated_by, :class_name => 'Authentify::User'

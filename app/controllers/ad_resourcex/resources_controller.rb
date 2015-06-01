@@ -19,7 +19,7 @@ module AdResourcex
 
 
     def create
-      @resource = AdResourcex::Resource.new(params[:resource], :as => :role_new)
+      @resource = AdResourcex::Resource.new(new_params)
       @resource.last_updated_by_id = session[:user_id]
       if @resource.save
         redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Saved!")
@@ -39,7 +39,7 @@ module AdResourcex
     def update
         @resource = AdResourcex::Resource.find_by_id(params[:id])
         @resource.last_updated_by_id = session[:user_id]
-        if @resource.update_attributes(params[:resource], :as => :role_update)
+        if @resource.update_attributes(edit_params)
           redirect_to URI.escape(SUBURI + "/authentify/view_handler?index=0&msg=Successfully Updated!")
         else
           flash[:notice] = t('Data Error. Not Updated!')
@@ -55,6 +55,18 @@ module AdResourcex
     end
     
     protected
+    
+    private
+    
+    def new_params
+      params.require(:resource).permit(:about_price, :category_id, :dimension, :location, :name, :resource_desp, :standard_price, :status_id, :in_service, :service_start_date,
+                    :service_end_date, :wf_state)
+    end
+    
+    def edit_params
+      params.require(:resource).permit(:about_price, :category_id, :dimension, :location, :name, :resource_desp, :standard_price, :status_id, :in_service, :service_start_date,
+                    :service_end_date, :wf_state)
+    end
 
   end
 end

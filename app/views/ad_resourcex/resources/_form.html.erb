@@ -2,6 +2,7 @@
   <%= render inline: @erb_code %>
   
 <% else %>
+<h4><%= @title %></h4>
 <%= simple_form_for @resource do |f| %> 
   <%= f.input :name, :label => t('Name') %> 
   <%= f.input :resource_desp, :label => t('Resource Description'), :input_html => { :rows => 3} %> 
